@@ -1,7 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-
+var http = require('../web/http-helpers');
+console.log(http);
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -25,7 +26,11 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(callback) {
+  http.serveAssets('', exports.paths.list, (err, data) => {
+    var urls = data.split('\n');
+    callback(urls);
+  });
 };
 
 exports.isUrlInList = function() {
