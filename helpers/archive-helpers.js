@@ -1,7 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var http = require('../web/http-helpers');
+var utility = require('../web/http-helpers');
+var request = require('request');
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
  * Consider using the `paths` object below to store frequently used file paths. This way,
@@ -26,7 +27,7 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  http.serveAssets('', exports.paths.list, (err, data) => {
+  utility.serveAssets('', exports.paths.list, (err, data) => {
     var urls = data.split('\n');
     callback(urls);
   });
@@ -42,14 +43,21 @@ exports.isUrlInList = function(url, callback) {
 exports.addUrlToList = function(url, callback) {
   exports.isUrlInList(url, (is) => {
     if (!is) {
-      http.appendAssets(exports.paths.list, url, callback);
+      utility.appendAssets(exports.paths.list, url, callback);
     }
   });
 };
 
 exports.isUrlArchived = function(url, callback) {
-  http.accessFile(exports.paths.archivedSites + '/' + url, callback);
+  fs.exists(exports.paths.archivedSites + '/' + url, callback);
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urlArray, callback) {
+  _.each(urlArray, (website) => {
+    request('http://' + website, (err, response, body) => {
+      var file = fs.createWriteStream(exports.paths.archivedSites + '/' + website + '.html');
+      file.write(body);
+      callback();
+    });
+  });
 };
