@@ -116,6 +116,7 @@ describe('archive helpers', function() {
 
       archive.addUrlToList('someurl.com', function () {
         archive.isUrlInList('someurl.com', function (is) {
+          console.log('##############', is);
           expect(is);
           done();
         });

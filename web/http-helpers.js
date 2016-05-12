@@ -59,5 +59,15 @@ exports.appendAssets = function(path, data, callback) {
   });
 };
 
+exports.accessFile = function(path, callback) {
+  fs.access(path, fs.F_OK, function(err) {
+    if (!err) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+};
+
 
 // As you progress, keep thinking about what helper functions you can put here!
