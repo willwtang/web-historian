@@ -42,10 +42,7 @@ var postRequest = function(req, res) {
           res.writeHead(302, headers);
         });
         res.writeHead(301, {'location': '/loading.html'});
-        archive.downloadUrls([website], () => {
-          res.writeHead(301, {'location': website + '.html'});
-          res.end('');
-        });
+        archive.addUrlToList(website, () => {});
       } else {
         res.writeHead(301, {'location': website + '.html'});
         res.end('');

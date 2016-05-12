@@ -57,7 +57,9 @@ exports.downloadUrls = function(urlArray, callback) {
     request('http://' + website, (err, response, body) => {
       var file = fs.createWriteStream(exports.paths.archivedSites + '/' + website + '.html');
       file.write(body);
-      callback();
+      if (callback) {
+        callback();
+      }
     });
   });
 };
