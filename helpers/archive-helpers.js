@@ -33,10 +33,19 @@ exports.readListOfUrls = function(callback) {
   });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(url, callback) {
+  exports.readListOfUrls((urls) => {
+    var result = urls.indexOf(url) !== -1;
+    callback(result);
+  });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url, callback) {
+  exports.isUrlInList(url, (is) => {
+    if (!is) {
+      http.appendAssets('_', exports.paths.list, () => {});
+    }
+  });
 };
 
 exports.isUrlArchived = function() {

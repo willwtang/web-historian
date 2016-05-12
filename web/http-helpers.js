@@ -36,25 +36,26 @@ exports.serveAssets = function(res, asset, callback) {
   });
 };
 
-exports.appendAssets = function(req, path, callback, stringModifier) {
+exports.getData = function(req, path, callback) {
   var body = [];
   req.on('data', chunk => body.push(chunk.toString()));
   req.on('end', () => {
-
     body = body.join('');
-    if (stringModifier) {
-      body = stringModifier(body);
+    callback(body);
+  });
+};
+
+exports.appendAssets = function(path, data, callback) {
+  fs.appendFile(path, data, (err) => {
+    if (err) {
+      response.writeHead(401, headers);
+      response.end('');
+      return;
     }
-    fs.appendFile(path, body, (err) => {
-      if (err) {
-        console.error(err);
-        response.writeHead(401, headers);
-        response.end('');
-        return;
-      }
-      var headers = _.extend(exports.headers, {'Content-Type': 'text/plain'});
+    var headers = _.extend(exports.headers, {'Content-Type': 'text/plain'});
+    if (callback) {
       callback(err, headers);
-    });
+    }
   });
 };
 

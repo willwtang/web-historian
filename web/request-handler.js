@@ -33,8 +33,10 @@ var getRequest = function(req, res) {
 };
 
 var postRequest = function(req, res) {
-  http.appendAssets(req, archive.paths.list, (_err, headers) => {
-    res.writeHead(302, headers);
-    res.end('');
-  }, (string) => string.slice(4) + '\n');
+  http.getData(req, archive.paths.list, (body, headers) => {
+    http.appendAssets(archive.paths.list, body.slice(4) + '\n', (err, headers) => {
+      res.writeHead(302, headers);
+      res.end('');
+    });
+  });
 };
